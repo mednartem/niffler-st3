@@ -175,8 +175,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
-    public int createUserInUserData(UserEntity user) {
-        int createdRows = 0;
+    public void createUserInUserData(UserEntity user) {
         try (Connection conn = userdataDs.getConnection()) {
             try (PreparedStatement usersPs = conn.prepareStatement(
                     "INSERT INTO users (username, currency) " +
@@ -185,13 +184,11 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
                 usersPs.setString(1, user.getUsername());
                 usersPs.setString(2, CurrencyValues.RUB.name());
 
-                createdRows = usersPs.executeUpdate();
+                usersPs.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return createdRows;
     }
 
     @Override

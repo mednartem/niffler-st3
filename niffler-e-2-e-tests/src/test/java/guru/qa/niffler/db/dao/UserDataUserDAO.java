@@ -7,7 +7,7 @@ public interface UserDataUserDAO {
 
     UserDataEntity getUserInUserData(String username);
 
-    int createUserInUserData(UserEntity user);
+    void createUserInUserData(UserEntity user);
 
     void updateUserInUserData(UserDataEntity user);
 
