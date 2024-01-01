@@ -5,6 +5,7 @@ import guru.qa.niffler.db.dao.UserDataUserDAO;
 import guru.qa.niffler.db.model.Authority;
 import guru.qa.niffler.db.model.AuthorityEntity;
 import guru.qa.niffler.db.model.UserEntity;
+import guru.qa.niffler.util.RandomData;
 import org.junit.jupiter.api.extension.*;
 
 import java.util.Arrays;
@@ -26,8 +27,8 @@ public class DBUserExtension implements BeforeEachCallback, AfterTestExecutionCa
         if (annotation != null) {
             UserEntity createdUser = new UserEntity();
             createdUser
-                    .setUsername(annotation.username())
-                    .setPassword(annotation.password())
+                    .setUsername(annotation.username().equals("") ? RandomData.generateName() : annotation.username())
+                    .setPassword(annotation.password().equals("") ? RandomData.generatePassword() : annotation.password())
                     .setEnabled(true)
                     .setAccountNonExpired(true)
                     .setAccountNonLocked(true)
@@ -49,7 +50,7 @@ public class DBUserExtension implements BeforeEachCallback, AfterTestExecutionCa
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         UserEntity user = context.getStore(NAMESPACE).get(context.getUniqueId(), UserEntity.class);
-        userDataUserDAO.deleteUserByIdInUserData(user.getUsername());
+        userDataUserDAO.deleteUserByUsernameInUserData(user.getUsername());
         authUserDAO.deleteUserById(user.getId());
     }
 
