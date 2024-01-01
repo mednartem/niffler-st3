@@ -16,8 +16,8 @@ import java.util.UUID;
 
 public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
 
-    private static DataSource authDs = DataSourceProvider.INSTANCE.getDataSource(ServiceDB.AUTH);
-    private static DataSource userdataDs = DataSourceProvider.INSTANCE.getDataSource(ServiceDB.USERDATA);
+    private static final DataSource authDs = DataSourceProvider.INSTANCE.getDataSource(ServiceDB.AUTH);
+    private static final DataSource userdataDs = DataSourceProvider.INSTANCE.getDataSource(ServiceDB.USERDATA);
 
     @Override
     public UserEntity getUser(String username) {
@@ -41,6 +41,32 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
                 } else {
                     throw new IllegalArgumentException("User with username " + username + " not found");
                 }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public UserEntity getUserById(UUID userId) {
+        try (Connection conn = authDs.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE id = ?")) {
+            ps.setObject(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                UserEntity user = new UserEntity();
+                user.setId(UUID.fromString(rs.getString("id")));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEnabled(rs.getBoolean("enabled"));
+                user.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                user.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                user.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+
+                return user;
+            } else {
+                throw new IllegalArgumentException("User with username " + userId + " not found");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -103,7 +129,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
-    public void updateUser(UserEntity user) {
+    public UserEntity updateUser(UserEntity user) {
         try (Connection conn = authDs.getConnection();
              PreparedStatement ps = conn.prepareStatement(
                      "UPDATE users SET password = ?, enabled = ?, account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? WHERE id = ?")) {
@@ -119,6 +145,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
             if (updatedRows == 0) {
                 throw new IllegalArgumentException("User with id " + user.getId() + " not found");
             }
+            return getUserById(user.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -213,7 +240,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
-    public void deleteUserByIdInUserData(String username) {
+    public void deleteUserByUsernameInUserData(String username) {
         try (Connection conn = userdataDs.getConnection()) {
             try (PreparedStatement userPs = conn.prepareStatement("DELETE FROM users WHERE username = ?")) {
                 userPs.setString(1, username);
