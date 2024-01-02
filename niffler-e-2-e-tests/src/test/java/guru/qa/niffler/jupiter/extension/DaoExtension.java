@@ -1,9 +1,10 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.db.dao.AuthUserDAO;
-import guru.qa.niffler.db.dao.AuthUserDAOHibernate;
-import guru.qa.niffler.db.dao.AuthUserDAOSpringJdbc;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
+import guru.qa.niffler.db.dao.impl.hibernate.AuthUserDAOHibernate;
+import guru.qa.niffler.db.dao.impl.spring_jdbc.AuthUserDAOSpringJdbc;
+import guru.qa.niffler.jupiter.annotation.Dao;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
@@ -25,13 +26,11 @@ public class DaoExtension implements TestInstancePostProcessor {
                 } else if ("spring".equals(System.getProperty("db.impl"))) {
                     dao = new AuthUserDAOSpringJdbc();
                 } else {
-                    dao = new AuthUserDAOSpringJdbc();
+                    dao = new AuthUserDAOHibernate();
                 }
 
                 field.set(testInstance, dao);
             }
-
         }
-
     }
 }
