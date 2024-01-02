@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.model;
+package guru.qa.niffler.db.model.auth;
 
 import jakarta.persistence.*;
 
@@ -11,7 +11,7 @@ import static jakarta.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class AuthUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
@@ -50,7 +50,7 @@ public class UserEntity {
         return username;
     }
 
-    public UserEntity setUsername(String username) {
+    public AuthUserEntity setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -59,7 +59,7 @@ public class UserEntity {
         return password;
     }
 
-    public UserEntity setPassword(String password) {
+    public AuthUserEntity setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -68,7 +68,7 @@ public class UserEntity {
         return enabled;
     }
 
-    public UserEntity setEnabled(Boolean enabled) {
+    public AuthUserEntity setEnabled(Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -77,7 +77,7 @@ public class UserEntity {
         return accountNonExpired;
     }
 
-    public UserEntity setAccountNonExpired(Boolean accountNonExpired) {
+    public AuthUserEntity setAccountNonExpired(Boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
         return this;
     }
@@ -86,7 +86,7 @@ public class UserEntity {
         return accountNonLocked;
     }
 
-    public UserEntity setAccountNonLocked(Boolean accountNonLocked) {
+    public AuthUserEntity setAccountNonLocked(Boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
         return this;
     }
@@ -95,7 +95,7 @@ public class UserEntity {
         return credentialsNonExpired;
     }
 
-    public UserEntity setCredentialsNonExpired(Boolean credentialsNonExpired) {
+    public AuthUserEntity setCredentialsNonExpired(Boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
         return this;
     }
@@ -104,7 +104,7 @@ public class UserEntity {
         return authorities;
     }
 
-    public UserEntity setAuthorities(List<AuthorityEntity> authorities) {
+    public AuthUserEntity setAuthorities(List<AuthorityEntity> authorities) {
         this.authorities = authorities;
         return this;
     }
@@ -117,7 +117,7 @@ public class UserEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
+        AuthUserEntity that = (AuthUserEntity) o;
         return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(enabled, that.enabled) && Objects.equals(accountNonExpired, that.accountNonExpired) && Objects.equals(accountNonLocked, that.accountNonLocked) && Objects.equals(credentialsNonExpired, that.credentialsNonExpired) && Objects.equals(authorities, that.authorities);
     }
 
