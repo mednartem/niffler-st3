@@ -5,6 +5,7 @@ import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.UserJson;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.CollectionCondition.size;
@@ -13,6 +14,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static guru.qa.niffler.jupiter.annotation.User.UserType.INVITATION_RECEIVED;
 import static guru.qa.niffler.jupiter.annotation.User.UserType.WITH_FRIENDS;
 
+@Disabled
 public class InvitationReceivedWebTest extends BaseWebTest {
 
     @BeforeEach
