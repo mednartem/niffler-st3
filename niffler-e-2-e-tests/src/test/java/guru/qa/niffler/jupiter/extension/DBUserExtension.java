@@ -31,8 +31,8 @@ public class DBUserExtension implements BeforeEachCallback, AfterTestExecutionCa
         if (annotation != null) {
             AuthUserEntity createdUser = new AuthUserEntity();
             createdUser
-                    .setUsername(annotation.username().equals("") ? RandomData.generateName() : annotation.username())
-                    .setPassword(annotation.password().equals("") ? RandomData.generatePassword() : annotation.password())
+                    .setUsername(annotation.username().isEmpty() ? RandomData.generateName() : annotation.username())
+                    .setPassword(annotation.password().isEmpty() ? RandomData.generatePassword() : annotation.password())
                     .setEnabled(true)
                     .setAccountNonExpired(true)
                     .setAccountNonLocked(true)
