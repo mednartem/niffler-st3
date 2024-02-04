@@ -61,7 +61,7 @@ public class DBUserExtension implements BeforeEachCallback, AfterTestExecutionCa
     public void afterTestExecution(ExtensionContext context) throws Exception {
         AuthUserEntity user = context.getStore(NAMESPACE).get(context.getUniqueId(), AuthUserEntity.class);
         userDataUserDAO.deleteUserByUsernameInUserData(user.getUsername());
-        authUserDAO.deleteUserById(user);
+        authUserDAO.deleteUser(user);
     }
 
     @Override

@@ -150,7 +150,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO {
     }
 
     @Override
-    public void deleteUserById(AuthUserEntity user) {
+    public void deleteUser(AuthUserEntity user) {
         try (Connection conn = authDs.getConnection()) {
             conn.setAutoCommit(false);
 

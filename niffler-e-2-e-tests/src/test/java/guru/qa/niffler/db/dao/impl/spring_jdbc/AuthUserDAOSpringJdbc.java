@@ -106,7 +106,7 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO {
     }
 
     @Override
-    public void deleteUserById(AuthUserEntity user) {
+    public void deleteUser(AuthUserEntity user) {
         authTpl.execute(status -> {
             authJdbcTemplate.update(con -> {
                 PreparedStatement authorityPs = con.prepareStatement("DELETE from authorities WHERE user_id = ?");
