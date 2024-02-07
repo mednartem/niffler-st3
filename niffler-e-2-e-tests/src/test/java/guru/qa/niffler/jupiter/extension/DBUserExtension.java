@@ -56,7 +56,6 @@ public class DBUserExtension implements BeforeEachCallback, AfterTestExecutionCa
         }
     }
 
-
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         AuthUserEntity user = context.getStore(NAMESPACE).get(context.getUniqueId(), AuthUserEntity.class);

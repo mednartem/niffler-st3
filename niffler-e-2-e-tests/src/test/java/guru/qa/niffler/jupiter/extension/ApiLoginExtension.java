@@ -6,7 +6,9 @@ import guru.qa.niffler.api.AuthServiceClient;
 import guru.qa.niffler.api.context.CookieContext;
 import guru.qa.niffler.api.context.SessionStorageContext;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
+import guru.qa.niffler.jupiter.annotation.DBUser;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -22,7 +24,15 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
         ApiLogin annotation = extensionContext.getRequiredTestMethod().getAnnotation(ApiLogin.class);
         if (annotation != null) {
-            doLogin(annotation.username(), annotation.password());
+            String username = annotation.username();
+            String password = annotation.password();
+            DBUser dbUser = extensionContext.getRequiredTestMethod().getAnnotation(DBUser.class);
+            if (dbUser != null || username.isEmpty() || password.isEmpty()) {
+                AuthUserEntity user = extensionContext.getStore(DBUserExtension.NAMESPACE).get(extensionContext.getUniqueId(), AuthUserEntity.class);
+                username = user.getUsername();
+                password = user.getPassword();
+            }
+            doLogin(username, password);
         }
     }
 
@@ -46,7 +56,8 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
     }
 
     @Override
-    public void afterTestExecution(ExtensionContext extensionContext) throws Exception {
+    public void afterTestExecution(ExtensionContext extensionContext) {
         SessionStorageContext.getInstance().clearContext();
+        CookieContext.getInstance().clearContext();
     }
 }
